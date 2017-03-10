@@ -1,8 +1,10 @@
-package com.fonfon.geohash.hash;
+package com.fonfon.geohash;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class BoundingBox {
+public class BoundingBox implements Parcelable {
 
     private double minLatitude;
     private double maxLatitude;
@@ -18,6 +20,13 @@ public class BoundingBox {
         maxLongitude = Math.max(x1, x2);
         minLatitude = Math.min(y1, y2);
         maxLatitude = Math.max(y1, y2);
+    }
+
+    protected BoundingBox(Parcel in) {
+        minLatitude = in.readDouble();
+        maxLatitude = in.readDouble();
+        minLongitude = in.readDouble();
+        maxLongitude = in.readDouble();
     }
 
     public Location getUpperLeft() {
@@ -96,5 +105,30 @@ public class BoundingBox {
 
     public double getMinLongitude() {
         return minLongitude;
+    }
+
+    public static final Creator<BoundingBox> CREATOR = new Creator<BoundingBox>() {
+        @Override
+        public BoundingBox createFromParcel(Parcel in) {
+            return new BoundingBox(in);
+        }
+
+        @Override
+        public BoundingBox[] newArray(int size) {
+            return new BoundingBox[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(minLatitude);
+        dest.writeDouble(maxLatitude);
+        dest.writeDouble(minLongitude);
+        dest.writeDouble(maxLongitude);
     }
 }

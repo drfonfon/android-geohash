@@ -1,4 +1,4 @@
-package com.fonfon.geohash.hash;
+package com.fonfon.geohash;
 
 import android.location.Location;
 

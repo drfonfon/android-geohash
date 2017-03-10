@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-import com.fonfon.geohash.hash.GeoHash;
-import com.fonfon.geohash.hash.LocationExt;
+import com.fonfon.geohash.GeoHash;
+import com.fonfon.geohash.LocationExt;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
