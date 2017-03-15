@@ -1,76 +1,68 @@
 package com.fonfon.geohash.sample;
 
-import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.fonfon.geohash.GeoHash;
-import com.fonfon.geohash.LocationExt;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
+public class MainActivity extends AppCompatActivity {
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, new ConverterFragment())
+                .commit();
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.converter);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.getItemId() == R.id.converter) {
+                    if (!item.isChecked()) {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.main_container, new ConverterFragment())
+                                .commit();
+                    }
+                } else {
+                    if(!item.isChecked()) {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.main_container, new MapFragment())
+                                .commit();
+                    }
+                }
+                item.setChecked(true);
+                drawerLayout.closeDrawers();
+                return false;
+            }
+        });
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        Location location = LocationExt.newLocation(53.2014645, 45.009858);
-
-        GeoHash hash0 = GeoHash.fromLocation(location, 8);
-        GeoHash hash1 = GeoHash.fromLocation(location, 7);
-        GeoHash hash2 = GeoHash.fromLocation(location, 6);
-
-        googleMap.addPolygon(new PolygonOptions()
-                .add(fromLocation(hash0.getBoundingBox().getUpperLeft()))
-                .add(fromLocation(hash0.getBoundingBox().getUpperRight()))
-                .add(fromLocation(hash0.getBoundingBox().getLowerRight()))
-                .add(fromLocation(hash0.getBoundingBox().getLowerLeft()))
-                .fillColor(Color.argb(100, 125, 200, 200))
-                .strokeColor(Color.BLUE)
-        );
-
-        googleMap.addPolygon(new PolygonOptions()
-                .add(fromLocation(hash1.getBoundingBox().getUpperLeft()))
-                .add(fromLocation(hash1.getBoundingBox().getUpperRight()))
-                .add(fromLocation(hash1.getBoundingBox().getLowerRight()))
-                .add(fromLocation(hash1.getBoundingBox().getLowerLeft()))
-                .fillColor(Color.argb(100, 125, 200, 200))
-                .strokeColor(Color.RED)
-        );
-
-        googleMap.addPolygon(new PolygonOptions()
-                .add(fromLocation(hash2.getBoundingBox().getUpperLeft()))
-                .add(fromLocation(hash2.getBoundingBox().getUpperRight()))
-                .add(fromLocation(hash2.getBoundingBox().getLowerRight()))
-                .add(fromLocation(hash2.getBoundingBox().getLowerLeft()))
-                .fillColor(Color.argb(100, 125, 200, 200))
-                .strokeColor(Color.MAGENTA)
-        );
-
-        googleMap.addMarker(new MarkerOptions()
-                .position(fromLocation(hash0.getBoundingBox().getCenterPoint()))
-        );
-
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(fromLocation(hash0.getBoundingBox().getCenterPoint()), 18));
-
-        Log.d("debug", hash0.toString());
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
     }
 
-    private LatLng fromLocation(Location location) {
-        return new LatLng(location.getLatitude(), location.getLongitude());
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Geohash</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="converter">Converter</string>
+    <string name="map">Map</string>
+    <string name="geohash">GeoHash</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="precision">Precision</string>
+    <string name="next">next</string>
+    <string name="prev">prev</string>
+    <string name="adjacent">Adjacent</string>
 </resources>
