@@ -3,7 +3,6 @@ package com.fonfon.geohash;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 public class BoundingBox implements Parcelable {
 
@@ -12,7 +11,7 @@ public class BoundingBox implements Parcelable {
     private double minLongitude;
     private double maxLongitude;
 
-    public BoundingBox(@NonNull Location p1, @NonNull Location p2) {
+    public BoundingBox(Location p1, Location p2) {
         this(p1.getLatitude(), p2.getLatitude(), p1.getLongitude(), p2.getLongitude());
     }
 
@@ -60,14 +59,14 @@ public class BoundingBox implements Parcelable {
         return false;
     }
 
-    public boolean contains(@NonNull Location point) {
+    public boolean contains(Location point) {
         return point.getLatitude() >= minLatitude
                 && point.getLongitude() >= minLongitude
                 && point.getLatitude() <= maxLatitude
                 && point.getLongitude() <= maxLongitude;
     }
 
-    public boolean intersects(@NonNull BoundingBox other) {
+    public boolean intersects(BoundingBox other) {
         return !(other.minLongitude > maxLongitude
                 || other.maxLongitude < minLongitude
                 || other.minLatitude > maxLatitude

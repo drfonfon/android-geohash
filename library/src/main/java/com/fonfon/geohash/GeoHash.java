@@ -3,7 +3,6 @@ package com.fonfon.geohash;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +47,7 @@ public final class GeoHash implements Parcelable {
      * @param numberOfCharacters max characters count - 12
      * @return new {@link GeoHash}
      */
-    public static GeoHash fromLocation(@NonNull Location location, int numberOfCharacters) {
+    public static GeoHash fromLocation(Location location, int numberOfCharacters) {
         if (numberOfCharacters > MAX_CHARACTER_PRECISION) {
             throw new IllegalArgumentException(
                     "A geohash can only be " + MAX_CHARACTER_PRECISION + " character long.");
@@ -64,7 +63,7 @@ public final class GeoHash implements Parcelable {
      * @param geohash geoHash {@link String}
      * @return new {@link GeoHash}
      */
-    public static GeoHash fromString(@NonNull String geohash) {
+    public static GeoHash fromString(String geohash) {
         double[] latitudeRange = {-LATITUDE_MAX_ABS, LATITUDE_MAX_ABS};
         double[] longitudeRange = {-LONGITUDE_MAX_ABS, LONGITUDE_MAX_ABS};
 
@@ -257,14 +256,14 @@ public final class GeoHash implements Parcelable {
         return fromLongValue(ord << MAX_BIT_PRECISION - significantBits, significantBits);
     }
 
-    private static void setBoundingBox(@NonNull GeoHash hash, double[] latitudeRange, double[] longitudeRange) {
+    private static void setBoundingBox(GeoHash hash, double[] latitudeRange, double[] longitudeRange) {
         hash.boundingBox = new BoundingBox(
                 LocationExt.newLocation(latitudeRange[0], longitudeRange[0]),
                 LocationExt.newLocation(latitudeRange[1], longitudeRange[1])
         );
     }
 
-    private static void divideRangeDecode(@NonNull GeoHash hash, double[] range, boolean b) {
+    private static void divideRangeDecode(GeoHash hash, double[] range, boolean b) {
         double mid = (range[0] + range[1]) / 2;
         if (b) {
             hash.addOnBitToEnd();
