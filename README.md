@@ -6,5 +6,11 @@ An implementation of Geohashes in Android. The produced hashes, when using chara
 
 ## Example
 ```java
-  GeoHash hash = GeoHash.fromString("babab12");
+  Location location = new Location("geohash");
+  location.setLatitude(53.2030476);
+  location.setLongitude(45.0324948);
+  
+  GeoHash hash = GeoHash.fromLocation(location, 9);
+  hash.toString(); //"v12n8trdj"
 ```
+

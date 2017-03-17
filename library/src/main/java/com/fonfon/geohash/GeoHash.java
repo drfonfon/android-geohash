@@ -11,14 +11,14 @@ public final class GeoHash implements Parcelable {
 
     public static final int MAX_CHARACTER_PRECISION = 12;
 
-    private static final long FIRST_BIT_FLAGGED = 0x8000000000000000L;
-    private static final double LATITUDE_MAX_ABS = 90.0;
-    private static final double LONGITUDE_MAX_ABS = 180.0;
-    private static final int MAX_BIT_PRECISION = Long.bitCount(Long.MAX_VALUE) + 1;// max - 64;
-    private static final int BASE32_BITS = 5;
-    private static final int[] BITS = {16, 8, 4, 2, 1};
-    private static final String base32 = "0123456789bcdefghjkmnpqrstuvwxyz";
-    private static final int MAX_GEO_HASH_BITS_COUNT = BASE32_BITS * MAX_CHARACTER_PRECISION;
+    public static final long FIRST_BIT_FLAGGED = 0x8000000000000000L;
+    public static final double LATITUDE_MAX_ABS = 90.0;
+    public static final double LONGITUDE_MAX_ABS = 180.0;
+    public static final int MAX_BIT_PRECISION = Long.bitCount(Long.MAX_VALUE) + 1;// max - 64;
+    public static final int BASE32_BITS = 5;
+    public static final int[] BITS = {16, 8, 4, 2, 1};
+    public static final String base32 = "0123456789bcdefghjkmnpqrstuvwxyz";
+    public static final int MAX_GEO_HASH_BITS_COUNT = BASE32_BITS * MAX_CHARACTER_PRECISION;
 
     private static final Map<Character, Integer> decodeMap = new HashMap<>();
 
