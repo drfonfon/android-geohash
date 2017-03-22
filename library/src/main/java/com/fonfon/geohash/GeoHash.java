@@ -150,6 +150,28 @@ public final class GeoHash implements Parcelable {
     }
 
     /**
+     * @return 9 adjacent {@link GeoHash} for this one. They are in the following order:
+     * NW, N, NE, W, CENTER, E , SW, S, SE
+     */
+    public GeoHash[] getAdjacentRect() {
+        GeoHash northern = getNorthernNeighbour();
+        GeoHash eastern = getEasternNeighbour();
+        GeoHash southern = getSouthernNeighbour();
+        GeoHash western = getWesternNeighbour();
+        return new GeoHash[]{
+                northern.getWesternNeighbour(),
+                northern,
+                northern.getEasternNeighbour(),
+                western,
+                this,
+                eastern,
+                southern.getWesternNeighbour(),
+                southern,
+                southern.getEasternNeighbour(),
+        };
+    }
+
+    /**
      * @return N adjacent hash
      */
     public GeoHash getNorthernNeighbour() {
