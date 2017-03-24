@@ -43,6 +43,16 @@ public final class GeoHash implements Parcelable {
     /**
      * Generate {@link GeoHash} from
      *
+     * @param location {@link Location} object
+     * @return new {@link GeoHash}
+     */
+    public static GeoHash fromLocation(Location location) {
+        return new GeoHash(location.getLatitude(), location.getLongitude(), MAX_CHARACTER_PRECISION * BASE32_BITS);
+    }
+
+    /**
+     * Generate {@link GeoHash} from
+     *
      * @param location           {@link Location} object
      * @param numberOfCharacters max characters count - 12
      * @return new {@link GeoHash}
@@ -153,7 +163,7 @@ public final class GeoHash implements Parcelable {
      * @return 9 adjacent {@link GeoHash} for this one. They are in the following order:
      * NW, N, NE, W, CENTER, E , SW, S, SE
      */
-    public GeoHash[] getAdjacentRect() {
+    public GeoHash[] getAdjacentBox() {
         GeoHash northern = getNorthernNeighbour();
         GeoHash eastern = getEasternNeighbour();
         GeoHash southern = getSouthernNeighbour();
@@ -169,6 +179,35 @@ public final class GeoHash implements Parcelable {
                 southern,
                 southern.getEasternNeighbour(),
         };
+    }
+
+    /**
+     * @return internal Geohashes
+     */
+    public GeoHash[] getChildHashes() {
+        if (significantBits % BASE32_BITS != 0) {
+            throw new IllegalStateException("Cannot convert a geoHash to base32");
+        }
+        if (significantBits / BASE32_BITS < MAX_CHARACTER_PRECISION) {
+            GeoHash[] geoHashes = new GeoHash[base32.length()];
+            String val = toString();
+            for (int i = 0; i < base32.length(); i++) {
+                geoHashes[i] = GeoHash.fromString(val + base32.toCharArray()[i]);
+            }
+            return geoHashes;
+        }
+        return null;
+    }
+
+    /**
+     * @return external Hash
+     */
+    public GeoHash getParentHash() {
+        if (significantBits > 5) {
+            String hash = toString();
+            return GeoHash.fromString(hash.substring(0, hash.length() -1));
+        }
+        return null;
     }
 
     /**
