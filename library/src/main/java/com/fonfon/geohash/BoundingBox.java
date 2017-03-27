@@ -11,6 +11,12 @@ public class BoundingBox implements Parcelable {
     private double minLongitude;
     private double maxLongitude;
 
+    /**
+     * Generate {@link BoundingBox} from
+     *
+     * @param p1 first {@link Location}
+     * @param p2 second {@link Location}
+     */
     public BoundingBox(Location p1, Location p2) {
         this(p1.getLatitude(), p2.getLatitude(), p1.getLongitude(), p2.getLongitude());
     }
@@ -29,25 +35,37 @@ public class BoundingBox implements Parcelable {
         maxLongitude = in.readDouble();
     }
 
-    public Location getUpperLeft() {
+    /**
+     * @return top left box location
+     */
+    public Location getTopLeft() {
         return LocationExt.newLocation(maxLatitude, minLongitude);
     }
 
-    public Location getUpperRight() {
+    /**
+     * @return top right box location
+     */
+    public Location getTopRight() {
         return LocationExt.newLocation(maxLatitude, maxLongitude);
     }
 
-    public Location getLowerLeft() {
+    /**
+     * @return bottom left box location
+     */
+    public Location getBottomLeft() {
         return LocationExt.newLocation(minLatitude, minLongitude);
     }
 
-    public Location getLowerRight() {
+    /**
+     * @return bottom right box location
+     */
+    public Location getBottomRight() {
         return LocationExt.newLocation(minLatitude, maxLongitude);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null) return false;
+        if (obj == null) return false;
         if (this == obj) return true;
         if (obj instanceof BoundingBox) {
             BoundingBox that = (BoundingBox) obj;
@@ -59,6 +77,10 @@ public class BoundingBox implements Parcelable {
         return false;
     }
 
+    /**
+     * @param point {@link Location} object
+     * @return location contains in box
+     */
     public boolean contains(Location point) {
         return point.getLatitude() >= minLatitude
                 && point.getLongitude() >= minLongitude
@@ -66,6 +88,10 @@ public class BoundingBox implements Parcelable {
                 && point.getLongitude() <= maxLongitude;
     }
 
+    /**
+     * @param other BoundingBox
+     * @return intersects of two boxes
+     */
     public boolean intersects(BoundingBox other) {
         return !(other.minLongitude > maxLongitude
                 || other.maxLongitude < minLongitude
@@ -75,25 +101,40 @@ public class BoundingBox implements Parcelable {
 
     @Override
     public String toString() {
-        return getUpperLeft().toString() + " -> " + getLowerRight().toString();
+        return getTopLeft().toString() + " -> " + getBottomRight().toString();
     }
 
+    /**
+     * @return center box point
+     */
     public Location getCenterPoint() {
         return LocationExt.newLocation((minLatitude + maxLatitude) / 2, (minLongitude + maxLongitude) / 2);
     }
 
+    /**
+     * @return maximum box latitude
+     */
     public double getMaxLatitude() {
         return maxLatitude;
     }
 
+    /**
+     * @return maximum box longitude
+     */
     public double getMaxLongitude() {
         return maxLongitude;
     }
 
+    /**
+     * @return minimum box latitude
+     */
     public double getMinLatitude() {
         return minLatitude;
     }
 
+    /**
+     * @return minimum box longitude
+     */
     public double getMinLongitude() {
         return minLongitude;
     }

@@ -41,26 +41,26 @@ public class BoundingBoxTest {
 
     @Test
     public void getUpperLeftTest() throws Exception {
-        assertEquals(boxA.getUpperLeft().getLatitude(), locationB.getLatitude());
-        assertEquals(boxA.getUpperLeft().getLongitude(), locationA.getLongitude());
+        assertEquals(boxA.getTopLeft().getLatitude(), locationB.getLatitude());
+        assertEquals(boxA.getTopLeft().getLongitude(), locationA.getLongitude());
     }
 
     @Test
     public void getUpperRightTest() throws Exception {
-        assertEquals(boxA.getUpperRight().getLatitude(), locationB.getLatitude());
-        assertEquals(boxA.getUpperRight().getLongitude(), locationB.getLongitude());
+        assertEquals(boxA.getTopRight().getLatitude(), locationB.getLatitude());
+        assertEquals(boxA.getTopRight().getLongitude(), locationB.getLongitude());
     }
 
     @Test
     public void getLowerLeftTest() throws Exception {
-        assertEquals(boxA.getLowerLeft().getLatitude(), locationA.getLatitude());
-        assertEquals(boxA.getLowerLeft().getLongitude(), locationA.getLongitude());
+        assertEquals(boxA.getBottomLeft().getLatitude(), locationA.getLatitude());
+        assertEquals(boxA.getBottomLeft().getLongitude(), locationA.getLongitude());
     }
 
     @Test
     public void getLowerRightTest() throws Exception {
-        assertEquals(boxA.getLowerRight().getLatitude(), locationA.getLatitude());
-        assertEquals(boxA.getLowerRight().getLongitude(), locationB.getLongitude());
+        assertEquals(boxA.getBottomRight().getLatitude(), locationA.getLatitude());
+        assertEquals(boxA.getBottomRight().getLongitude(), locationB.getLongitude());
     }
 
     @Test

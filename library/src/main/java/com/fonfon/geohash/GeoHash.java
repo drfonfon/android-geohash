@@ -43,6 +43,29 @@ public final class GeoHash implements Parcelable {
     /**
      * Generate {@link GeoHash} from
      *
+     * @param latitude double latitude
+     * @param longitude double longitude
+     * @return new {@link GeoHash}
+     */
+    public static GeoHash fromCoordinates(double latitude, double longitude) {
+        return fromLocation(LocationExt.newLocation(latitude, longitude));
+    }
+
+    /**
+     * Generate {@link GeoHash} from
+     *
+     * @param latitude double latitude
+     * @param longitude double longitude
+     * @param numberOfCharacters max characters count - 12
+     * @return new {@link GeoHash}
+     */
+    public static GeoHash fromCoordinates(double latitude, double longitude, int numberOfCharacters) {
+        return fromLocation(LocationExt.newLocation(latitude, longitude), numberOfCharacters);
+    }
+
+    /**
+     * Generate {@link GeoHash} from
+     *
      * @param location {@link Location} object
      * @return new {@link GeoHash}
      */
@@ -70,18 +93,18 @@ public final class GeoHash implements Parcelable {
     /**
      * Generate {@link GeoHash} from
      *
-     * @param geohash geoHash {@link String}
+     * @param geoHash geoHash {@link String}
      * @return new {@link GeoHash}
      */
-    public static GeoHash fromString(String geohash) {
+    public static GeoHash fromString(String geoHash) {
         double[] latitudeRange = {-LATITUDE_MAX_ABS, LATITUDE_MAX_ABS};
         double[] longitudeRange = {-LONGITUDE_MAX_ABS, LONGITUDE_MAX_ABS};
 
         boolean isEvenBit = true;
         GeoHash hash = new GeoHash();
 
-        for (int i = 0; i < geohash.length(); i++) {
-            int cd = decodeMap.get(geohash.charAt(i));
+        for (int i = 0; i < geoHash.length(); i++) {
+            int cd = decodeMap.get(geoHash.charAt(i));
             for (int j = 0; j < BASE32_BITS; j++) {
                 int mask = BITS[j];
                 if (isEvenBit) {
@@ -91,6 +114,37 @@ public final class GeoHash implements Parcelable {
                 }
                 isEvenBit = !isEvenBit;
             }
+        }
+
+        setBoundingBox(hash, latitudeRange, longitudeRange);
+        hash.bits <<= (MAX_BIT_PRECISION - hash.significantBits);
+        return hash;
+    }
+
+    /**
+     * Generate {@link GeoHash} from
+     * @param hashVal long value bits
+     * @param significantBits count of signification bits
+     * @return new {@link GeoHash}
+     */
+    public static GeoHash fromLongValue(long hashVal, int significantBits) {
+        double[] latitudeRange = {-LATITUDE_MAX_ABS, LATITUDE_MAX_ABS};
+        double[] longitudeRange = {-LONGITUDE_MAX_ABS, LONGITUDE_MAX_ABS};
+
+        boolean isEvenBit = true;
+        GeoHash hash = new GeoHash();
+
+        String binaryString = Long.toBinaryString(hashVal);
+        while (binaryString.length() < MAX_BIT_PRECISION) {
+            binaryString = "0" + binaryString;
+        }
+        for (int j = 0; j < significantBits; j++) {
+            if (isEvenBit) {
+                divideRangeDecode(hash, longitudeRange, binaryString.charAt(j) != '0');
+            } else {
+                divideRangeDecode(hash, latitudeRange, binaryString.charAt(j) != '0');
+            }
+            isEvenBit = !isEvenBit;
         }
 
         setBoundingBox(hash, latitudeRange, longitudeRange);
@@ -254,6 +308,20 @@ public final class GeoHash implements Parcelable {
         return recombineLatLonBitsToHash(latitudeBits, longitudeBits);
     }
 
+    /**
+     * @return signification GeoHash bits
+     */
+    public byte getSignificantBits() {
+        return significantBits;
+    }
+
+    /**
+     * @return bits from Long value
+     */
+    public long toLong() {
+        return bits;
+    }
+
     @Override
     public String toString() {
         if (significantBits % BASE32_BITS != 0) {
@@ -287,31 +355,6 @@ public final class GeoHash implements Parcelable {
     /**
      * Private metods ----------------------------------------------------
      */
-
-    private static GeoHash fromLongValue(long hashVal, int significantBits) {
-        double[] latitudeRange = {-LATITUDE_MAX_ABS, LATITUDE_MAX_ABS};
-        double[] longitudeRange = {-LONGITUDE_MAX_ABS, LONGITUDE_MAX_ABS};
-
-        boolean isEvenBit = true;
-        GeoHash hash = new GeoHash();
-
-        String binaryString = Long.toBinaryString(hashVal);
-        while (binaryString.length() < MAX_BIT_PRECISION) {
-            binaryString = "0" + binaryString;
-        }
-        for (int j = 0; j < significantBits; j++) {
-            if (isEvenBit) {
-                divideRangeDecode(hash, longitudeRange, binaryString.charAt(j) != '0');
-            } else {
-                divideRangeDecode(hash, latitudeRange, binaryString.charAt(j) != '0');
-            }
-            isEvenBit = !isEvenBit;
-        }
-
-        setBoundingBox(hash, latitudeRange, longitudeRange);
-        hash.bits <<= (MAX_BIT_PRECISION - hash.significantBits);
-        return hash;
-    }
 
     private static GeoHash fromOrd(long ord, int significantBits) {
         return fromLongValue(ord << MAX_BIT_PRECISION - significantBits, significantBits);

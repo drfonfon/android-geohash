@@ -29,14 +29,16 @@ public class GeoHashTest {
     }
 
     @Test
-    public void fromLocationTest1() throws Exception {
-        assertEquals(GeoHash.fromLocation(location).toString(), "v12n8trdjnvu");
+    public void fromCoordinatesTest() throws Exception {
+        assertEquals(GeoHash.fromCoordinates(53.2030476, 45.0324948).toString(), "v12n8trdjnvu");
+        assertEquals(GeoHash.fromCoordinates(53.2030476, 45.0324948, 9).toString(), "v12n8trdj");
     }
 
     @Test
     public void fromLocationTest() throws Exception {
         assertEquals(GeoHash.fromLocation(location, 9).toString(), "v12n8trdj");
         assertEquals(GeoHash.fromLocation(location, 8).toString(), "v12n8trd");
+        assertEquals(GeoHash.fromLocation(location).toString(), "v12n8trdjnvu");
     }
 
     @Test
